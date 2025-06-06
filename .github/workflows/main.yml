@@ -1,0 +1,31 @@
+name: Daily Web Scraper
+
+on:
+  schedule:
+    # Exécute tous les jours à 08h00 UTC (ajustez l'heure selon votre besoin)
+    # Note: GitHub Actions uses UTC. Convertissez votre heure locale en UTC.
+    # Par exemple, 08h00 UTC = 10h00 CEST (heure d'été de l'Europe centrale)
+    - cron: '0 8 * * *'
+
+  # Permet de lancer le workflow manuellement depuis l'interface GitHub
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9' # Utilisez une version de Python compatible
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run scraper
+        run: python scraper.py
